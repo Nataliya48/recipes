@@ -16,14 +16,8 @@
 class Recipes
 {
 
-    private $file;
+    private $path;
     private $name;
-    private $composition;
-    private $description;
-
-    /*
-     * нужно получать с формы данные, какое поле было выбрано и в соответствии с этим открывать нужный файл
-     * */
 
     /**
      * Получение символьного кода открываемого файла
@@ -34,7 +28,6 @@ class Recipes
     public function selectFile($name)
     {
         $this->name = $name;
-        var_dump([$this->name, $name]);
     }
 
     /**
@@ -44,18 +37,10 @@ class Recipes
      */
     public function __construct($storagePath)
     {
-        //$this->file = $storagePath . '/' . $this->name .'.csv'; //файл с рецептами
-        $this->file = $storagePath . '/recipes.csv';
-        /*if (!is_readable($storagePath) || !is_readable($this->file)) {
-            chmod($storagePath, 0777);
-            chmod($this->file, 0777);
-        }*/
-        if (!is_writable($storagePath) || !is_readable($storagePath)) {
-            throw new Exception('Directory unavailable for writing or reading: ' . $storagePath);
+        $this->path = $storagePath;
+        if (!is_writable($this->path) || !is_readable($this->path)) {
+            throw new Exception('Directory unavailable for writing or reading: ' . $this->path);
         }
-        /*if (!is_writable($this->file) || !is_readable($this->file)) {
-            throw new Exception('File unavailable for writing or reading: ' . $storagePath);
-        }*/
     }
 
     /**
@@ -65,7 +50,7 @@ class Recipes
      */
     protected function getRecipes()
     {
-        return file_get_contents($this->file);
+        return file_get_contents($this->path . '/' . $this->name .'.csv');
     }
 
     /**
