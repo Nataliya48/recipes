@@ -10,7 +10,17 @@
             font-family: Georgia, 'Times New Roman', Times, serif;
             font-size: 17pt
         }
+        .additional {
+            color: #d66666;
+            font-style: italic;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 13pt
+        }
+        form {
+            display:none;
+        }
     </style>
+
 </head>
 <body>
 
@@ -45,5 +55,20 @@ else:
 <p><?= $recipe[2]; ?></p>
 <hr>
 
+<form method="post">
+    <h1 class="title">Добавить свой рецепт</h1>
+    <p class="additional">Введите название:</p>
+    <input type="text" name="name"><br>
+    <p class="additional">Введите ингридиенты через запятую:</p>
+    <input type="text" name="ingredients"><br>
+    <p class="additional">Опишите сам рецепт приготовления:</p>
+    <input type="text" name="description"><br>
+    <button>Отправить</button>
+</form>
+
+<button id="show-form">Показать форму</button>
+
+<script src="script.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </body>
 <?php endif; ?>
