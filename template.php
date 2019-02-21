@@ -16,14 +16,14 @@
             font-family: Georgia, 'Times New Roman', Times, serif;
             font-size: 13pt
         }
-        form {
+        #add {
             display:none;
         }
     </style>
 
+
 </head>
 <body>
-
 <h1 class="title">Выберите рецепт</h1>
 
 <form method="post">
@@ -55,7 +55,7 @@ else:
 <p><?= $recipe[2]; ?></p>
 <hr>
 
-<form method="post">
+<form method="post" id="add">
     <h1 class="title">Добавить свой рецепт</h1>
     <p class="additional">Введите название:</p>
     <input type="text" name="name"><br>
@@ -63,12 +63,12 @@ else:
     <input type="text" name="ingredients"><br>
     <p class="additional">Опишите сам рецепт приготовления:</p>
     <input type="text" name="description"><br>
-    <button>Отправить</button>
+    <p><input type="submit" value="Записать"></p>
 </form>
 
 <button id="show-form">Показать форму</button>
 
-<script src="script.js" type="text/javascript"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="/script.js" type="text/javascript"></script>
 </body>
 <?php endif; ?>

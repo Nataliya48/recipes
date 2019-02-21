@@ -1,5 +1,6 @@
-$('#show-form').on('click', function() {
-  $('form').show();
-  $(this).hide();
+$(function() {
+    $('#show-form').on('click', function () {
+        $('#add').show();
+        $(this).hide();
+    });
 });
-
