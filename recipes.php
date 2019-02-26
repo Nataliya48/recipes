@@ -18,6 +18,8 @@ class Recipes
 
     private $path;
     private $name;
+    //private $ingredients;
+    //private $description;
 
     /**
      * Получение символьного кода открываемого файла
@@ -50,7 +52,7 @@ class Recipes
      */
     protected function getRecipes()
     {
-        return file_get_contents($this->path . '/' . $this->name .'.csv');
+        return trim(file_get_contents($this->path . '/' . $this->name .'.csv'));
     }
 
     /**
@@ -61,20 +63,37 @@ class Recipes
     public function formationArrayForReading()
     {
         $content = explode(PHP_EOL, $this->getRecipes());
-        unset($content[count($content) - 1]);
         $content[1] = explode(",", $content[1]);
         return $content;
     }
 
-    /*public function putRecipes()
+    /**
+     * Запись нового рецепта с формы в файл
+     *
+     * @param $name название
+     * @param $ingredients ингредиенты
+     * @param $description описание
+     * @return bool|int
+     */
+    public function putRecipes($name, $ingredients, $description)
     {
-
+        if (!empty($name) && !empty($ingredients) && !empty($description)) {
+            return file_put_contents($this->path . '/new.csv', $this->formationArrayForWriting($name, $ingredients, $description));
+        }
     }
 
-    public function formationArrayForWriting()
+    /**
+     * Формирование массива с формы для записи
+     *
+     * @param $name название
+     * @param $ingredients ингредиенты
+     * @param $description описание
+     * @return string
+     */
+    private function formationArrayForWriting($name, $ingredients, $description)
     {
-        //сюда с формы приходит инфа о введенных данных
-        $this->putRecipes();
-    }*/
+        $array = [$name, $ingredients, $description];
+        return implode(PHP_EOL, $array);
+    }
     
 }

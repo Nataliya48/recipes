@@ -33,6 +33,7 @@
             <option value="crab-salad">Крабовый салат</option>
             <option value="pizza-on-a-loaf">Пицца на батоне</option>
             <option value="fruit-dessert">Фруктовый десерт</option>
+            <option value="new">Новый</option>
         </select></p>
     <p><input type="submit" value="Выбрать"></p>
 </form>
@@ -55,14 +56,14 @@ else:
 <p><?= $recipe[2]; ?></p>
 <hr>
 
-<form method="post" id="add">
+<form method="post" id="add" name="add">
     <h1 class="title">Добавить свой рецепт</h1>
     <p class="additional">Введите название:</p>
-    <input type="text" name="name"><br>
+    <input type="text" required name="name"><br>
     <p class="additional">Введите ингридиенты через запятую:</p>
-    <input type="text" name="ingredients"><br>
+    <input type="text" required name="ingredients"><br>
     <p class="additional">Опишите сам рецепт приготовления:</p>
-    <input type="text" name="description"><br>
+    <input type="text" required name="description"><br>
     <p><input type="submit" value="Записать"></p>
 </form>
 
