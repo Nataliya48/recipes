@@ -29,11 +29,14 @@
 <form method="post">
     <p><select size="1" name="recipe">
             <option disabled>Выберите рецепт</option>
+            <?php foreach ($name as $row): ?>
             <option value="apple-in-the-oven">Яблоки в духовке</option>
-            <option value="crab-salad">Крабовый салат</option>
+            <?php endforeach; ?>
+            <!-- <option value="crab-salad">Крабовый салат</option>
             <option value="pizza-on-a-loaf">Пицца на батоне</option>
             <option value="fruit-dessert">Фруктовый десерт</option>
             <option value="new">Новый</option>
+            <option value="Nazvanie">Название</option> -->
         </select></p>
     <p><input type="submit" value="Выбрать"></p>
 </form>

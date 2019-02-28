@@ -1,18 +1,5 @@
 <?php
 
-/*Есть файл со списком рецептов, записанный в формате:
-
-Название рецепта
-* ингредиент
-* ингредиент
-* ингредиент
-Сам рецепт
-
-Выводить рецепты на экране в виде, приведенном в файле.
-
-В дальнейшем добавить форму добавления рецепта.
-*/
-
 class Recipes
 {
 
@@ -20,17 +7,6 @@ class Recipes
     private $name;
     //private $ingredients;
     //private $description;
-
-    /**
-     * Получение символьного кода открываемого файла
-     *
-     * @param $name символьный код файла
-     * @return mixed
-     */
-    public function selectFile($name)
-    {
-        $this->name = $name;
-    }
 
     /**
      * Recipes constructor.
@@ -43,6 +19,17 @@ class Recipes
         if (!is_writable($this->path) || !is_readable($this->path)) {
             throw new Exception('Directory unavailable for writing or reading: ' . $this->path);
         }
+    }
+
+    /**
+     * Получение символьного кода открываемого файла
+     *
+     * @param $name символьный код файла
+     * @return mixed
+     */
+    public function selectFile($name)
+    {
+        $this->name = $name;
     }
 
     /**
@@ -75,10 +62,10 @@ class Recipes
      * @param $description описание
      * @return bool|int
      */
-    public function putRecipes($name, $ingredients, $description)
+    public function putRecipes($name, $ingredients, $description, $fileName)
     {
         if (!empty($name) && !empty($ingredients) && !empty($description)) {
-            return file_put_contents($this->path . '/new.csv', $this->formationArrayForWriting($name, $ingredients, $description));
+            file_put_contents($this->path . '/' .  $fileName . '.csv', $this->formationArrayForWriting($name, $ingredients, $description));
         }
     }
 
@@ -95,5 +82,48 @@ class Recipes
         $array = [$name, $ingredients, $description];
         return implode(PHP_EOL, $array);
     }
-    
+
+    /**
+     * Перевод названия с кириллицы на латиницу
+     *
+     * @param $text строка, которую требуется транслитировать
+     * @return mixed
+     */
+    private function translateName($text)
+    {
+        $cyr = [
+            'а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н','о','п',
+            'р','с','т','у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я',
+            'А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н','О','П',
+            'Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я'
+        ];
+        $lat = [
+            'a','b','v','g','d','e','io','zh','z','i','y','k','l','m','n','o','p',
+            'r','s','t','u','f','h','ts','ch','sh','sht','a','i','y','e','yu','ya',
+            'A','B','V','G','D','E','Io','Zh','Z','I','Y','K','L','M','N','O','P',
+            'R','S','T','U','F','H','Ts','Ch','Sh','Sht','A','I','Y','e','Yu','Ya'
+        ];
+        return str_replace($cyr, $lat, $text);
+    }
+
+    /**
+     * Возвращает транслитированную строку
+     *
+     * @param $text строка, которую требуется транслитировать
+     * @return mixed
+     */
+    public function convertFileName($text)
+    {
+        return $this->translateName($text);
+    }
+
+    /**
+     * Список названий файлов
+     *
+     * @return array
+     */
+    public function getNameFile()
+    {
+        return scandir($this->path);
+    }
 }
