@@ -4,20 +4,23 @@
         body {
             background: #ffefd5; /* Цвет фона и путь к файлу */
         }
+
         .title {
             color: #b00000;
             font-style: italic;
             font-family: Georgia, 'Times New Roman', Times, serif;
             font-size: 17pt
         }
+
         .additional {
             color: #d66666;
             font-style: italic;
             font-family: Georgia, 'Times New Roman', Times, serif;
             font-size: 13pt
         }
+
         #add {
-            display:none;
+            display: none;
         }
     </style>
 
@@ -29,14 +32,9 @@
 <form method="post">
     <p><select size="1" name="recipe">
             <option disabled>Выберите рецепт</option>
-            <?php foreach ($name as $row): ?>
-            <option value="apple-in-the-oven">Яблоки в духовке</option>
+            <?php foreach ($names as $name): ?>
+                <option value="<?= $name ?>"><?= $name ?></option>
             <?php endforeach; ?>
-            <!-- <option value="crab-salad">Крабовый салат</option>
-            <option value="pizza-on-a-loaf">Пицца на батоне</option>
-            <option value="fruit-dessert">Фруктовый десерт</option>
-            <option value="new">Новый</option>
-            <option value="Nazvanie">Название</option> -->
         </select></p>
     <p><input type="submit" value="Выбрать"></p>
 </form>
@@ -51,9 +49,9 @@ else:
 <hr>
 <ul>
     <?php foreach ($recipe[1] as $row): ?>
-    <li>
-        <?= $row; ?>
-    </li>
+        <li>
+            <?= $row; ?>
+        </li>
     <?php endforeach; ?>
 </ul>
 <p><?= $recipe[2]; ?></p>
