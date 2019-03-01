@@ -117,16 +117,17 @@ class Recipes
         return $this->translateName($text);
     }
 
+
     /**
-     * Список названий файлов
+     * Возвращает список названий файлов без расширения
      *
      * @return array
      */
-    public function getNamesFile()
+    public function getFileNames(): array
     {
         $names = array_diff(scandir($this->path), ['..', '.']);
         $names = array_map(function ($name) {
-            return explode('.', $name)[0];
+            return pathinfo($name, PATHINFO_FILENAME);
         }, $names);
         return $names;
     }
