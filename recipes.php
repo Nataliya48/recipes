@@ -103,7 +103,12 @@ class Recipes
             'A', 'B', 'V', 'G', 'D', 'E', 'Io', 'Zh', 'Z', 'I', 'Y', 'K', 'L', 'M', 'N', 'O', 'P',
             'R', 'S', 'T', 'U', 'F', 'H', 'Ts', 'Ch', 'Sh', 'Sht', 'A', 'I', 'Y', 'e', 'Yu', 'Ya'
         ];
-        return str_replace($cyr, $lat, $text);
+        if (preg_match("/^[а-яА-ЯёЁ]+$/", $text)) {
+            return str_replace($cyr, $lat, $text);
+        } else {
+            return str_replace($lat, $cyr, $text);
+        }
+
     }
 
     /**
@@ -115,6 +120,21 @@ class Recipes
     public function convertFileName($text)
     {
         return $this->translateName($text);
+    }
+
+    /**
+     * Возвращает транслитированную строку
+     *
+     * @param $text строка, которую требуется транслитировать
+     * @return mixed
+     */
+    public function normalizeFileName($names)
+    {
+        $result = [];
+        foreach ($names as $name){
+            $result[] = $this->translateName($name);
+        }
+        return $result;
     }
 
 

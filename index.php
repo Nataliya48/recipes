@@ -3,7 +3,7 @@ include 'recipes.php';
 try {
 
     $recipes = new Recipes("/home/nata/Рабочий стол/Recipes");
-    $names = $recipes->getFileNames();
+    $names = $recipes->normalizeFileName($recipes->getFileNames());
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $recipes->selectFile($_POST['recipe']);
         $recipe = $recipes->formationArrayForReading();
