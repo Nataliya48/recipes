@@ -28,17 +28,19 @@
 </head>
 <body>
 <h1 class="title">Выберите рецепт</h1>
-
-<form method="post">
-    <p><select size="1" name="recipe">
-            <option disabled>Выберите рецепт</option>
-            <?php foreach ($names as $name): ?>
-                <option value="<?= $name ?>"><?= $name ?></option>
-            <?php endforeach; ?>
-        </select></p>
-    <p><input type="submit" value="Выбрать"></p>
-</form>
-
+<?php if (!empty($names)): ?>
+    <form method="post">
+        <p><select size="1" name="recipe">
+                <option disabled>Выберите рецепт</option>
+                <?php foreach ($names as $name): ?>
+                    <option value="<?= $name ?>"><?= $name ?></option>
+                <?php endforeach; ?>
+            </select></p>
+        <p><input type="submit" value="Выбрать"></p>
+    </form>
+<?php else: ?>
+    <h1 class="title">Введите свой первый рецепт</h1>
+<?php endif; ?>
 <?php
 if (isset($errorMsg)):
     echo $errorMsg;

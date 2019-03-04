@@ -5,8 +5,6 @@ class Recipes
 
     private $path;
     private $name;
-    //private $ingredients;
-    //private $description;
 
     /**
      * Recipes constructor.
@@ -22,7 +20,17 @@ class Recipes
     }
 
     /**
-     * Получение символьного кода открываемого файла
+     * Проверка файлов в директории
+     *
+     * @return array
+     */
+    private function getFilesInPathDir()
+    {
+        return array_diff(scandir($this->path), ['..', '.']);
+    }
+
+    /**
+     * Получение символьного кода открываемого файла (с формы)
      *
      * @param $name символьный код файла
      * @return mixed
@@ -145,7 +153,7 @@ class Recipes
      */
     public function getFileNames(): array
     {
-        $names = array_diff(scandir($this->path), ['..', '.']);
+        $names = $this->getFilesInPathDir();
         $names = array_map(function ($name) {
             return pathinfo($name, PATHINFO_FILENAME);
         }, $names);
