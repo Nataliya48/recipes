@@ -37,7 +37,16 @@ class Recipes
      */
     public function selectFile($name)
     {
+        //записывать в json файл в ключ "ru"
+        //file_put_contents('/data.json',$name);
         $this->name = $name;
+    }
+
+    private function addInJson()
+    {
+        //получаем инфу из файла, изджейсоним ее, добавляем инфу и заджейсониваем
+        $file = json_decode(file_get_contents($this->path . '/data.json'));
+
     }
 
     /**
@@ -138,6 +147,7 @@ class Recipes
      */
     public function normalizeFileName($names)
     {
+        //удалится за ненадобностью
         $result = [];
         foreach ($names as $name){
             $result[] = $this->translateName($name);
