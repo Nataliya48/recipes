@@ -17,6 +17,10 @@ class Recipes
         if (!is_writable($this->path) || !is_readable($this->path)) {
             throw new Exception('Directory unavailable for writing or reading: ' . $this->path);
         }
+        if (!file_exists($this->path . '/data.json')) {
+            file_put_contents($this->path . '/data.json', '');
+            chmod($this->path . '/data.json', 0777);
+        }
     }
 
     /**
@@ -26,7 +30,7 @@ class Recipes
      */
     private function getFilesInPathDir()
     {
-        return array_diff(scandir($this->path), ['..', '.']);
+        return array_diff(scandir($this->path), ['..', '.', 'data.json']);
     }
 
     /**
