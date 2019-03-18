@@ -30,7 +30,7 @@ class Recipes
      */
     private function getFilesInPathDir()
     {
-        return array_diff(scandir($this->path), ['..', '.', 'data.json']);
+        return array_diff(scandir($this->path), ['..', '.']);
     }
 
     /**
@@ -41,26 +41,30 @@ class Recipes
      */
     public function selectFile($name)
     {
-        //записывать в json файл в ключ "ru"
-        //file_put_contents('/data.json',$name);
         $this->name = $name;
     }
 
-    private function addInJson()
+    /**
+     * Открыть data.json
+     *
+     * @return mixed
+     */
+    private function openJson()
     {
-        //получаем инфу из файла, изджейсоним ее, добавляем инфу и заджейсониваем
-        $file = json_decode(file_get_contents($this->path . '/data.json'));
-
+        return json_decode(file_get_contents($this->path . '/data.json'));
     }
 
     /**
-     * Получает информацию из файла название.csv
+     * Получает информацию из файла data.json
      *
      * @return bool|string
      */
     protected function getRecipes()
     {
-        return trim(file_get_contents($this->path . '/' . $this->name . '.csv'));
+        $file = $this->openJson();
+        $file = array_map(function ($this->name) {
+            return pathinfo($this->name, PATHINFO_FILENAME);
+        }, $file);
     }
 
     /**
@@ -98,7 +102,7 @@ class Recipes
      * @param $description описание
      * @return string
      */
-    private function formationArrayForWriting($name, $ingredients, $description)
+    public function formationArrayForWriting($name, $ingredients, $description)
     {
         $array = [$name, $ingredients, $description];
         return implode(PHP_EOL, $array);
@@ -116,19 +120,22 @@ class Recipes
             'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п',
             'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я',
             'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П',
-            'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я'
+            'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', ' '
         ];
         $lat = [
             'a', 'b', 'v', 'g', 'd', 'e', 'io', 'zh', 'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p',
             'r', 's', 't', 'u', 'f', 'h', 'ts', 'ch', 'sh', 'sht', 'a', 'i', 'y', 'e', 'yu', 'ya',
             'A', 'B', 'V', 'G', 'D', 'E', 'Io', 'Zh', 'Z', 'I', 'Y', 'K', 'L', 'M', 'N', 'O', 'P',
-            'R', 'S', 'T', 'U', 'F', 'H', 'Ts', 'Ch', 'Sh', 'Sht', 'A', 'I', 'Y', 'e', 'Yu', 'Ya'
+            'R', 'S', 'T', 'U', 'F', 'H', 'Ts', 'Ch', 'Sh', 'Sht', 'A', 'I', 'Y', 'e', 'Yu', 'Ya', '_'
         ];
-        if (preg_match("/^[а-яА-ЯёЁ]+$/", $text)) {
+        return str_replace($cyr, $lat, $text);
+
+        /*
+        if (preg_match('/^[а-яА-ЯёЁ\s]+$/', $text)) {
             return str_replace($cyr, $lat, $text);
         } else {
             return str_replace($lat, $cyr, $text);
-        }
+        }*/
 
     }
 
@@ -141,6 +148,22 @@ class Recipes
     public function convertFileName($text)
     {
         return $this->translateName($text);
+    }
+
+    /**
+     * Записать в json файл новый рецепт
+     *
+     * @param $name название
+     * @param $ingredients ингредиенты
+     * @param $description описание
+     */
+    public function addInJson($name, $ingredients, $description)
+    {
+        $file = $this->openJson();
+        $this->name = $this->translateName($name);
+        $items = explode(',', $ingredients);
+        $file[] = ['ru' => $name, 'en' => $this->name, 'items' => $items, 'description' => $description];
+        file_put_contents($this->path . '/data.json', json_encode($file, JSON_PRETTY_PRINT));
     }
 
     /**
