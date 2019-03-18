@@ -59,12 +59,16 @@ class Recipes
      *
      * @return bool|string
      */
-    protected function getRecipes()
+    public function getRecipes()
     {
         $file = $this->openJson();
-        $file = array_map(function ($this->name) {
-            return pathinfo($this->name, PATHINFO_FILENAME);
-        }, $file);
+        foreach ($file as $value){
+            if ($value['ru'] === $this->name){
+                echo '<pre>';
+                print_r($value);
+                echo '</pre>';
+            }
+        }
     }
 
     /**
