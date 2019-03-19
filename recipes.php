@@ -24,27 +24,6 @@ class Recipes
     }
 
     /**
-     * Проверка файлов в директории
-     *
-     * @return array
-     */
-    private function getFilesInPathDir()
-    {
-        return array_diff(scandir($this->path), ['..', '.']);
-    }
-
-    /**
-     * Получение символьного кода открываемого файла (с формы)
-     *
-     * @param $name символьный код файла
-     * @return mixed
-     */
-    public function selectFile($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
      * Открыть data.json
      *
      * @return mixed
@@ -55,18 +34,41 @@ class Recipes
     }
 
     /**
-     * Получает информацию из файла data.json
+     * Проверка файлов в директории
      *
-     * @return bool|string
+     * @return array
      */
-    public function getRecipes()
+    private function getFilesInPathDir()
+    {
+        return array_diff(scandir($this->path), ['..', '.']);
+    }
+
+    /**
+     * Получение списка названий из data.json
+     *
+     * @return array
+     */
+    public function getListName(): array
     {
         $file = $this->openJson();
         foreach ($file as $value){
-            if ($value['ru'] === $this->name){
-                echo '<pre>';
-                print_r($value);
-                echo '</pre>';
+            $array[] = $value->ru;
+        }
+        return $array;
+    }
+
+    /**
+     * Получает информацию из файла data.json, по ключу, выбранному на форме index.php
+     *
+     * @param $name название выбранного файла
+     * @return mixed
+     */
+    public function getRecipe($name)
+    {
+        $file = $this->openJson();
+        foreach ($file as $value){
+            if ($value->ru === $name){
+                return $value;
             }
         }
     }
@@ -78,7 +80,9 @@ class Recipes
      */
     public function formationArrayForReading()
     {
-        $content = explode(PHP_EOL, $this->getRecipes());
+        $file = $this->openJson();
+        //var_dump($file);
+        $content = explode(PHP_EOL, $this->getRecipe());
         $content[1] = explode(",", $content[1]);
         return $content;
     }

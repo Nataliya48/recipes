@@ -28,11 +28,11 @@
 </head>
 <body>
 <h1 class="title">Выберите рецепт</h1>
-<?php if (!empty($names)): ?>
+<?php if (!empty($listNames)): ?>
     <form method="post">
         <p><select size="1" name="recipe">
                 <option disabled>Выберите рецепт</option>
-                <?php foreach ($names as $name): ?>
+                <?php foreach ($listNames as $name): ?>
                     <option value="<?= $name ?>"><?= $name ?></option>
                 <?php endforeach; ?>
             </select></p>
