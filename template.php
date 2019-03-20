@@ -47,16 +47,16 @@ if (isset($errorMsg)):
 else:
 ?>
 
-<h1 class="title"><?= $recipe[0] ?></h1>
+<h1 class="title"><?= $dish->ru ?></h1>
 <hr>
 <ul>
-    <?php foreach ($recipe[1] as $row): ?>
+    <?php foreach ($dish->items as $item): ?>
         <li>
-            <?= $row; ?>
+            <?= $item; ?>
         </li>
     <?php endforeach; ?>
 </ul>
-<p><?= $recipe[2]; ?></p>
+<p><?= $dish->description; ?></p>
 <hr>
 
 <form method="post" id="add" name="add">

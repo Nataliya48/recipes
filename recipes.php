@@ -74,20 +74,6 @@ class Recipes
     }
 
     /**
-     * Формирование массива для печати
-     *
-     * @return array
-     */
-    public function formationArrayForReading()
-    {
-        $file = $this->openJson();
-        //var_dump($file);
-        $content = explode(PHP_EOL, $this->getRecipe());
-        $content[1] = explode(",", $content[1]);
-        return $content;
-    }
-
-    /**
      * Запись нового рецепта с формы в файл
      *
      * @param $name название
@@ -95,10 +81,13 @@ class Recipes
      * @param $description описание
      * @return bool|int
      */
-    public function putRecipes($name, $ingredients, $description, $fileName)
+    public function putRecipes($name, $ingredients, $description)
     {
+        //открыть файл и получить из него массив. кодировать из json. в конец массива добавить доп рецепт. кодировать json
+        $file = $this->openJson();
         if (!empty($name) && !empty($ingredients) && !empty($description)) {
-            file_put_contents($this->path . '/' . $fileName . '.csv', $this->formationArrayForWriting($name, $ingredients, $description));
+            $file[] = $this->formationArrayForWriting($name, $ingredients, $description);
+            file_put_contents($this->path . '/data.json', $file);
         }
     }
 
