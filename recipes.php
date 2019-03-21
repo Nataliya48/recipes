@@ -5,6 +5,10 @@ class Recipes
 
     private $path;
     private $name;
+    /**
+     * @var array Recipe
+     */
+    public $recipes;
 
     /**
      * Recipes constructor.
@@ -21,6 +25,7 @@ class Recipes
             file_put_contents($this->path . '/data.json', '');
             chmod($this->path . '/data.json', 0777);
         }
+        $this->openJson();
     }
 
     /**
@@ -30,7 +35,19 @@ class Recipes
      */
     private function openJson()
     {
-        return json_decode(file_get_contents($this->path . '/data.json'));
+        $json = json_decode(file_get_contents($this->path . '/data.json'));
+        $mapper = new JsonMapper();
+        $this->recipes = array_map(function ($value) use($mapper) {
+            return $mapper->map($value, new Recipe());
+        }, $json);
+    }
+
+    /**
+     * Запись в файл нового рецепта
+     */
+    private function saveRecipe()
+    {
+        file_put_contents($this->path . '/data.json', json_encode($this->recipes, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
 
     /**
@@ -50,8 +67,7 @@ class Recipes
      */
     public function getListName(): array
     {
-        $file = $this->openJson();
-        foreach ($file as $value){
+        foreach ($this->recipes as $value) {
             $array[] = $value->ru;
         }
         return $array;
@@ -65,9 +81,8 @@ class Recipes
      */
     public function getRecipe($name)
     {
-        $file = $this->openJson();
-        foreach ($file as $value){
-            if ($value->ru === $name){
+        foreach ($this->recipes as $value) {
+            if ($value->ru === $name) {
                 return $value;
             }
         }
@@ -83,12 +98,13 @@ class Recipes
      */
     public function putRecipes($name, $ingredients, $description)
     {
-        //открыть файл и получить из него массив. кодировать из json. в конец массива добавить доп рецепт. кодировать json
-        $file = $this->openJson();
-        if (!empty($name) && !empty($ingredients) && !empty($description)) {
-            $file[] = $this->formationArrayForWriting($name, $ingredients, $description);
-            file_put_contents($this->path . '/data.json', $file);
-        }
+        $recipe = new Recipe();
+        $recipe->ru = $name;
+        $recipe->description = $description;
+        $recipe->en = $this->translateName($name);
+        $recipe->items = explode(',', $ingredients);
+        $this->recipes[]=$recipe;
+        $this->saveRecipe();
     }
 
     /**
@@ -101,7 +117,7 @@ class Recipes
      */
     public function formationArrayForWriting($name, $ingredients, $description)
     {
-        $array = [$name, $ingredients, $description];
+        $array = ['ru' => $name, 'en' => $this->translateName($name), 'items' => explode(',', $ingredients), 'description' => $description];
         return implode(PHP_EOL, $array);
     }
 
@@ -126,25 +142,6 @@ class Recipes
             'R', 'S', 'T', 'U', 'F', 'H', 'Ts', 'Ch', 'Sh', 'Sht', 'A', 'I', 'Y', 'e', 'Yu', 'Ya', '_'
         ];
         return str_replace($cyr, $lat, $text);
-
-        /*
-        if (preg_match('/^[а-яА-ЯёЁ\s]+$/', $text)) {
-            return str_replace($cyr, $lat, $text);
-        } else {
-            return str_replace($lat, $cyr, $text);
-        }*/
-
-    }
-
-    /**
-     * Возвращает транслитированную строку
-     *
-     * @param $text строка, которую требуется транслитировать
-     * @return mixed
-     */
-    public function convertFileName($text)
-    {
-        return $this->translateName($text);
     }
 
     /**
@@ -154,14 +151,14 @@ class Recipes
      * @param $ingredients ингредиенты
      * @param $description описание
      */
-    public function addInJson($name, $ingredients, $description)
+    /*public function addInJson($name, $ingredients, $description)
     {
         $file = $this->openJson();
         $this->name = $this->translateName($name);
         $items = explode(',', $ingredients);
         $file[] = ['ru' => $name, 'en' => $this->name, 'items' => $items, 'description' => $description];
         file_put_contents($this->path . '/data.json', json_encode($file, JSON_PRETTY_PRINT));
-    }
+    }*/
 
     /**
      * Возвращает транслитированную строку
@@ -169,15 +166,15 @@ class Recipes
      * @param $text строка, которую требуется транслитировать
      * @return mixed
      */
-    public function normalizeFileName($names)
+    /*public function normalizeFileName($names)
     {
         //удалится за ненадобностью
         $result = [];
-        foreach ($names as $name){
+        foreach ($names as $name) {
             $result[] = $this->translateName($name);
         }
         return $result;
-    }
+    }*/
 
 
     /**
