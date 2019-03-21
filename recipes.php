@@ -37,7 +37,7 @@ class Recipes
     {
         $json = json_decode(file_get_contents($this->path . '/data.json'));
         $mapper = new JsonMapper();
-        $this->recipes = array_map(function ($value) use($mapper) {
+        $this->recipes = array_map(function ($value) use ($mapper) {
             return $mapper->map($value, new Recipe());
         }, $json);
     }
@@ -103,8 +103,11 @@ class Recipes
         $recipe->description = $description;
         $recipe->en = $this->translateName($name);
         $recipe->items = explode(',', $ingredients);
-        $this->recipes[]=$recipe;
-        $this->saveRecipe();
+        $this->recipes[] = $recipe;
+        if (!empty($name) && !empty($ingredients) && !empty($description)) {
+            $this->saveRecipe();
+            $this->getRecipe($recipe->ru);
+        }
     }
 
     /**
@@ -142,52 +145,5 @@ class Recipes
             'R', 'S', 'T', 'U', 'F', 'H', 'Ts', 'Ch', 'Sh', 'Sht', 'A', 'I', 'Y', 'e', 'Yu', 'Ya', '_'
         ];
         return str_replace($cyr, $lat, $text);
-    }
-
-    /**
-     * Записать в json файл новый рецепт
-     *
-     * @param $name название
-     * @param $ingredients ингредиенты
-     * @param $description описание
-     */
-    /*public function addInJson($name, $ingredients, $description)
-    {
-        $file = $this->openJson();
-        $this->name = $this->translateName($name);
-        $items = explode(',', $ingredients);
-        $file[] = ['ru' => $name, 'en' => $this->name, 'items' => $items, 'description' => $description];
-        file_put_contents($this->path . '/data.json', json_encode($file, JSON_PRETTY_PRINT));
-    }*/
-
-    /**
-     * Возвращает транслитированную строку
-     *
-     * @param $text строка, которую требуется транслитировать
-     * @return mixed
-     */
-    /*public function normalizeFileName($names)
-    {
-        //удалится за ненадобностью
-        $result = [];
-        foreach ($names as $name) {
-            $result[] = $this->translateName($name);
-        }
-        return $result;
-    }*/
-
-
-    /**
-     * Возвращает список названий файлов без расширения
-     *
-     * @return array
-     */
-    public function getFileNames(): array
-    {
-        $names = $this->getFilesInPathDir();
-        $names = array_map(function ($name) {
-            return pathinfo($name, PATHINFO_FILENAME);
-        }, $names);
-        return $names;
     }
 }
